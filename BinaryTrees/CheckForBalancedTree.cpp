@@ -37,7 +37,7 @@ pair<bool,int>isBalancedFast(Node *root){
        if(root==NULL){
            pair<bool,int>p={true,0};
            return p;
-       }
+       }   
        pair<bool,int>left = isBalancedFast(root->left);
        pair<bool,int>right = isBalancedFast(root->right);
        
