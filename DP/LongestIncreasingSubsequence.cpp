@@ -1,3 +1,16 @@
+//Normal
+ int solve(int ind, int prev,vector<int>arr, int n,vector<vector<int>>&dp){
+        if(ind==n)return 0;
+        if(dp[ind][prev+1]!=-1)return dp[ind][prev+1];
+        int len = 0+ solve(ind+1, prev,arr,n,dp);
+        if(prev == -1 || arr[ind]>arr[prev]){
+            len = max(len, 1+ solve(ind+1, ind, arr,n,dp));
+        }
+        return dp[ind][prev+1]=len;
+    }
+
+
+
 //Tabulation
 int longestIncreasingSubsequence(int arr[], int n)
 {
@@ -33,6 +46,21 @@ int longestIncreasingSubsequence(int arr[], int n)
     }
     return cur[-1+1];
 }
+//Better Tabulation
+   int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+    vector<int>dp(n,1);
+    int maxi = 1;
+    for(int i =0 ; i<n;i++){
+        for(int j =0 ; j<i;j++){
+            if (arr[j]<arr[i]){
+                dp[i]= max(dp[i], 1+dp[j]);
+            }
+        }
+        maxi = max(maxi, dp[i]);
+    }
+    return maxi;
+    }
 
 //BinarySearch
 

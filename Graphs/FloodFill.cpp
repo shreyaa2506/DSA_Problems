@@ -37,3 +37,33 @@ public:
     }
     
 };
+
+//DFS
+    void dfs(int row, int col, int initialcolor,int  color,vector<vector<int>>&image){
+        if(row<0 || col<0 || row>=image.size() || col>=image[0].size() ||image[row][col] != initialcolor ){
+            return;
+        }
+        image[row][col]= color;
+        dfs(row-1,col,initialcolor,color,image);
+        dfs(row+1, col, initialcolor, color,image);
+        dfs(row, col-1, initialcolor,color,image);
+        dfs(row,col+1, initialcolor, color, image);
+    }
+
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int initialcolor= image[sr][sc];
+        if(initialcolor!=color){
+            dfs(sr,sc,initialcolor,color,image);
+        }
+        return image;
+        // int n = image.size();
+        // int m = image[0] .size();
+        // int ic= image[sr][sc];
+        // vector<vector<int>>ans = image;
+        // int dr[]={-1,0,1,0};
+        // int dc[]={0,1,0,-1};
+        // bfs(n,m,sr,sc,ans,image,ic,color,dr,dc);
+        // return ans;
+       
+    }
