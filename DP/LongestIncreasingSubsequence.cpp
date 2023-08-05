@@ -1,51 +1,61 @@
-//Normal
- int solve(int ind, int prev,vector<int>arr, int n,vector<vector<int>>&dp){
-        if(ind==n)return 0;
-        if(dp[ind][prev+1]!=-1)return dp[ind][prev+1];
-        int len = 0+ solve(ind+1, prev,arr,n,dp);
-        if(prev == -1 || arr[ind]>arr[prev]){
-            len = max(len, 1+ solve(ind+1, ind, arr,n,dp));
+//Memoization
+    int solve(vector<int>nums, int n, int curr, int prev,vector<vector<int>>&dp){
+        if (curr == n)return 0;
+        if(dp[curr][prev+1]!=-1)return dp[curr][prev+1];
+        int take = 0; 
+        if(prev == -1 || nums[curr]>nums[prev]){
+            take = 1+solve(nums,n,curr+1, curr,dp);
         }
-        return dp[ind][prev+1]=len;
+        int nottake = solve(nums,n,curr+1,prev,dp);
+        return dp[curr][prev+1]= max(take,nottake);
     }
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>>dp(n, vector<int>(n+1,-1));
 
+        return solve(nums,n,0,-1,dp);
+    }
 
 
 //Tabulation
-int longestIncreasingSubsequence(int arr[], int n)
-{
-    vector<vector<int>>dp(n+1,vector<int>(n+1,0));
-    for(int ind = n-1; ind>=0;ind--){
-        for(int prev_ind = ind-1; prev_ind>=-1;prev_ind--){
-                int len = 0 + dp[ind+1][prev_ind+1];
-                if(prev_ind==-1 || arr[ind]>arr[prev_ind]){
-                    len = max(len, 1+dp[ind+1][ind+1]);
-                }
-                dp[ind][prev_ind+1]=len;
-                    }
-    }
-    return dp[0][-1+1];
-}
 
-//SpaceOptimization
-
-int longestIncreasingSubsequence(int arr[], int n)
-{
-    vector<vector<int>>dp(n+1,vector<int>(n+1,0));
-    vector<int>cur(n+1,0);
-    vector<int>ahead(n+1,0);
-    for(int ind = n-1; ind>=0;ind--){
-        for(int prev_ind = ind-1; prev_ind>=-1;prev_ind--){
-                int len = 0 + ahead[prev_ind+1];
-                if(prev_ind==-1 || arr[ind]>arr[prev_ind]){
-                    len = max(len, 1+ahead[ind+1]);
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>>dp(n+1, vector<int>(n+1,0));
+        for(int curr = n-1; curr>=0; curr--){
+            for(int prev = curr-1; prev>=-1;prev--){
+                int take = 0; 
+                if(prev == -1 || nums[curr]>nums[prev]){
+                    take = 1+dp[curr+1] [curr+1];
                 }
-                cur[prev_ind+1]=len;
+                int nottake = dp[curr+1][prev+1];
+                dp[curr][prev+1]= max(take,nottake);
                     }
-                    ahead= cur;
+        }
+
+        return dp[0][-1+1];
     }
-    return cur[-1+1];
-}
+
+
+int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>>dp(n+1, vector<int>(n+1,0));
+        vector<int>curRow(n+1,0);
+        vector<int>nextRow(n+1,0);
+        for(int curr = n-1; curr>=0; curr--){
+            for(int prev = curr-1; prev>=-1;prev--){
+                int take = 0; 
+                if(prev == -1 || nums[curr]>nums[prev]){
+                    take = 1+curRow[curr+1];
+                }
+                int nottake = nextRow[prev+1];
+                curRow[prev+1]= max(take,nottake);
+                    }
+                   nextRow=curRow;
+        }
+
+        return nextRow[-1+1];
+    }
 //Better Tabulation
    int lengthOfLIS(vector<int>& arr) {
         int n = arr.size();
@@ -64,18 +74,18 @@ int longestIncreasingSubsequence(int arr[], int n)
 
 //BinarySearch
 
-int longestIncreasingSubsequence(int arr[], int n)
-{
-    vector<int>temp;
-    temp.push_back(arr[0]);
-    for(int i =1; i<n;i++){
-        if(arr[i]>temp.back()){
-            temp.push_back(arr[i]);
+
+    int binSea(int n, vector<int>nums){
+        vector<int>ans;
+        ans.push_back(nums[0]);
+        for(int i = 1 ; i<n;i++){
+            if(nums[i]>ans.back()){
+                ans.push_back(nums[i]);
+            }
+            else{
+                int index = lower_bound(ans.begin(),ans.end(),nums[i])-ans.begin();
+                ans[index]=nums[i];
+            }
         }
-        else{
-            int ind = lower_bound(temp.begin(),temp.end(),arr[i])-temp.begin();
-            temp[ind]= arr[i];
-        }
-    }
-    return temp.size();
-}
+        return ans.size();
+    }   
